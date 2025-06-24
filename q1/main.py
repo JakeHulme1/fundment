@@ -1,7 +1,8 @@
 import argparse
 import pandas as pd
 
-from utils import validate_csv_filename, parse_data
+from utils import parse_data
+from twr import calculate_total_time_weighted_return
 
 # CLI setup
 parser = argparse.ArgumentParser(
@@ -12,9 +13,6 @@ parser.add_argument('input_file', help='Path to the input CSV file')
 args = parser.parse_args()
 
 def main():
-
-    # validate the filename
-    validate_csv_filename(args.input_file)
 
     # parse data into data frame
     data_frame = parse_data(args.input_file)
