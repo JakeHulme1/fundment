@@ -1,5 +1,6 @@
 import sys
 import argparse
+import pandas as pd
 
 from utils import parse_data
 from twr import calculate_total_time_weighted_return
@@ -20,7 +21,7 @@ def main():
     try:
         df = parse_data(args.input_file)
         twr_series = calculate_total_time_weighted_return(df)
-        print(f"Total time weighted return for the given data:\n {twr_series}")
+        print(twr_series)
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
 

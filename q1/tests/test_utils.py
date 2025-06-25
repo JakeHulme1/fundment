@@ -108,3 +108,13 @@ class TestParseData:
                 parse_data(tmp_path)
         finally:
             os.remove(tmp_path)
+
+    def test_parse_data_enforces_date_order(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as tmp:
+            tmp.write("valuation_date,total_valuation,cash_flow\n04/01/2025,0,0\n01/01/2025,0,0") # unclosed ""
+            tmp.flush() # ensure data is saved
+            tmp_path = tmp.name
+        result = parse_data(tmp_path)["valuation_date"]
+        correct_result = pd.to_datetime(["01/01/2025", "04/01/2025"], dayfirst=True)
+        assert result.tolist() == correct_result.tolist()
+        os.remove(tmp_path)

@@ -4,33 +4,40 @@ import numpy as np
 def calculate_total_time_weighted_return(data: pd.DataFrame) -> pd.Series:
     """
     Returns the decimal proportion of the total time weighted return.
+
+    Args:
+        - data (pandas.DataFrame) - this must contain the columns 'total_valuation' and 'cash_flow' and be sorted by date.
+
+    Returns:
+        - a pandas.Series containing the total weighted return indexed with each sub-period.
     """
-    prev_valuation = 0
-    weighted_returns = []
-    twr_series = pd.Series({})
+    dates = []
+    twr_values = []
+    running_factor = 1.0
+    prev_val = None
+
     for row in data.itertuples(index=False): # (itertuples() significantly faster than iterrows())
 
-        if prev_valuation == 0:
-            # initilise and skip first loop
-            prev_valuation = row.total_valuation
+        date = pd.to_datetime(row.valuation_date, format="%d/%m/%Y")
+        dates.append(date)
+        current_val = row.total_valuation
+        cash_flow = row.cash_flow
+
+        if prev_val == None: # first iteration set the return as 0 as a convention
+            twr_values.append(0.0)
+            prev_val = current_val
             continue
         
-        if row.total_valuation + row.cash_flow == 0:
-            # no change in return so continue
-            continue
-        
-        # calculate return for sub period
-        sub_return = (row.total_valuation - row.cash_flow) / prev_valuation
+        if prev_val != 0:
+            factor = (current_val - cash_flow) / prev_val
+        else: # avoids division by zero
+            factor = 1.0
 
-        # append to list 
-        weighted_returns.append(sub_return)
-
-        # update the previous total_valuation for next loop
-        prev_valuation = row.total_valuation
+        running_factor *= factor
+        twr_values.append(running_factor - 1)
     
-        # calculate total time weighted return for this period
-        # (numpy.prod() much faster than a for loop as it uses C)
-        twr = np.prod(weighted_returns) - 1
-        twr_series.add(twr)
+        prev_val = current_val
 
-    return twr_series
+    return pd.Series(data=twr_values, 
+                     index=pd.DatetimeIndex(dates),
+                     name='time_weighted_return')

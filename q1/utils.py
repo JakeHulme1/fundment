@@ -58,7 +58,7 @@ def parse_data(file_path: str) -> pd.DataFrame:
     except pd.errors.ParserError as e:
         raise ValueError(f"Error parsing CSV file: {e}")
     
-    # csv file structure validation
+    # header-only check
     if df.empty:
         raise ValueError("The CSV file has column headers but no data")
     
@@ -72,4 +72,6 @@ def parse_data(file_path: str) -> pd.DataFrame:
     ensure_numeric_colum(df, "total_valuation")
     ensure_numeric_colum(df, "cash_flow")
 
+    # sort by date for downstream code
+    df = df.sort_values("valuation_date").reset_index(drop=True)
     return df
