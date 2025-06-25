@@ -7,6 +7,7 @@ def calculate_total_time_weighted_return(data: pd.DataFrame) -> pd.Series:
     """
     prev_valuation = 0
     weighted_returns = []
+    twr_series = pd.Series({})
     for row in data.itertuples(index=False): # (itertuples() significantly faster than iterrows())
 
         if prev_valuation == 0:
@@ -27,12 +28,9 @@ def calculate_total_time_weighted_return(data: pd.DataFrame) -> pd.Series:
         # update the previous total_valuation for next loop
         prev_valuation = row.total_valuation
     
-    # calculate total time weighted return
-    # (numpy.prod() much faster than a for loop as it uses C)
-    twr = np.prod(weighted_returns) - 1
+        # calculate total time weighted return for this period
+        # (numpy.prod() much faster than a for loop as it uses C)
+        twr = np.prod(weighted_returns) - 1
+        twr_series.add(twr)
 
-    print("weighted_returns = ")
-    print(weighted_returns)
-    print(pd.Series([twr]))
-
-    return pd.Series([twr])
+    return twr_series

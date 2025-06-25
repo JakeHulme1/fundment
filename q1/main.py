@@ -1,24 +1,29 @@
+import sys
 import argparse
-import pandas as pd
 
 from utils import parse_data
 from twr import calculate_total_time_weighted_return
 
-# CLI setup
-parser = argparse.ArgumentParser(
-    prog='',
-    description=''
-)
-parser.add_argument('input_file', help='Path to the input CSV file')
-args = parser.parse_args()
+def parse_args():
+    parser = argparse.ArgumentParser(
+        prog="total time weighted return calculator",
+        description="Compute the time-weighted return for a valuation CSV."
+    )
+    parser.add_argument(
+        "input_file",
+        help="Path to the CSV file with columns: valuation_date, total_valuation, cash_flow"
+    )
+    return parser.parse_args()
 
 def main():
+    args = parse_args()
+    try:
+        df = parse_data(args.input_file)
+        twr_series = calculate_total_time_weighted_return(df)
+        print(f"Total time weighted return for the given data:\n {twr_series}")
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
 
-    # parse data into data frame
-    data_frame = parse_data(args.input_file)
-
-    # perform time weighted return calculation
-    calculate_total_time_weighted_return(data_frame)
 
 if __name__ =="__main__":
     main()
