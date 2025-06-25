@@ -2,7 +2,6 @@
 Hi Josh! I've put a few notes here just to explain how to use my implementation in the interest of making it as easy as possible for you to evaluate.
 
 # Q1
-To run the function `calculate_total_time_weighted_return()`, run this from the project root:
 
 ## Total Time Weighted Return Calculator
 
