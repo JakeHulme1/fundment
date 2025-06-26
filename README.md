@@ -1,8 +1,25 @@
 # Fundment Coding Assessment
 
+## Prerequisites & Setup
+
+1. **Python version**
+  This project requires Python 3.8 or later. I ran it in Python 3.13.3.
+
+2. **Create virtual environment**
+  ```bash
+  python3 -m venv .venv
+  source .venv/bin/activate
+  ```
+
+3. **Install dependencies**
+  There is a `requirements.txt`, but the only third-party packages I used can be installed by:
+  ```bash
+  pip install pandas numpy pytest
+  ```
+
 ## Summary
 
-Hi Josh! I've put a few notes here just to explain how to use my implementation in the interest of making it as easy as possible for you to evaluate.
+Hi Josh! I’ve included some notes to explain how to use my implementation and make it as easy as possible for you to evaluate.
 
 ## Q1
 
