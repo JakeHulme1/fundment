@@ -1,5 +1,9 @@
 # Fundment Coding Assessment
 
+## Summary
+
+Hi Josh! I’ve included some notes to explain how to use my implementation and make it as easy as possible for you to evaluate.
+
 ## Prerequisites & Setup
 
 1. **Python version**
@@ -16,10 +20,6 @@
   ```bash
   pip install pandas numpy pytest
   ```
-
-## Summary
-
-Hi Josh! I’ve included some notes to explain how to use my implementation and make it as easy as possible for you to evaluate.
 
 ## Q1
 

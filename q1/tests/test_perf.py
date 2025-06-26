@@ -1,23 +1,25 @@
 import time
 import numpy as np
 import pandas as pd
-import pytest
 
 from q1.twr import calculate_total_time_weighted_return
 
-def test_twr_performance_on_large_input():
-    n = 1000
-    dates = pd.date_range("2025-01-01", periods=n, freq="D")
+def random_valuation_df(size: int) -> pd.Series:
+    """Helper function to create a random pd.Series of specified length"""
 
+    dates = pd.date_range("2025-01-01", periods=size, freq="D")
     np.random.seed(42)
-    valuations = 1000 + np.cumsum(np.random.randn(n))
-    cash_flows = np.random.choice([0.0, 50.0, -50.0], size=n, p=[0.9, 0.05, 0.05])
-
-    df = pd.DataFrame({
-        "valuation_date": dates.strftime("%d/%m/%Y"),
+    valuations = 1000 + np.cumsum(np.random.rand(size))
+    cash_flows = np.random.choice([0.0, 50.0, -50.0], size=size, p=[0.8, 0.1, 0.1])
+    return pd.DataFrame({
+        "valuation_date": dates.strftime("%d/%m/%Y"),  # matches sample_valuations.csv date column
         "total_valuation": valuations,
         "cash_flow": cash_flows,
     })
+
+def test_twr_performance_on_large_input():
+    n = 1000
+    df = random_valuation_df(n)
 
     # measure execution time
     start = time.perf_counter()
@@ -32,25 +34,9 @@ def test_twr_performance_on_large_input():
 def test_scalability_of_twr_algorithm():
     n1 = 1000
     n2 = 10000
-    dates1 = pd.date_range("2025-01-01", periods=n1, freq="D")
-    dates2 = pd.date_range("2025-01-01", periods=n2, freq="D")
 
-    np.random.seed(42)
-    valuations1 = 1000 + np.cumsum(np.random.randn(n1))
-    cash_flows1 = np.random.choice([0.0, 50.0, -50.0], size=n1, p=[0.9, 0.05, 0.05])
-    valuations2 = 1000 + np.cumsum(np.random.randn(n2))
-    cash_flows2 = np.random.choice([0.0, 50.0, -50.0], size=n2, p=[0.9, 0.05, 0.05])
-
-    df1 = pd.DataFrame({
-        "valuation_date": dates1.strftime("%d/%m/%Y"),
-        "total_valuation": valuations1,
-        "cash_flow": cash_flows1,
-    })
-    df2 = pd.DataFrame({
-        "valuation_date": dates2.strftime("%d/%m/%Y"),
-        "total_valuation": valuations2,
-        "cash_flow": cash_flows2
-    })
+    df1 = random_valuation_df(n1)
+    df2 = random_valuation_df(n2)
 
     # measure execution time
     start1 = time.perf_counter()
